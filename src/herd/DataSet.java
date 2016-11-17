@@ -1,12 +1,12 @@
 package herd;
-
+import java.io.*;
 import java.util.ArrayList;
 
 /**
  * A dataset is a collection of statistics
  */
 public class DataSet {
-	
+	final String FILE_NAME = "/home/ryan/Desktop/OOPDA/HorsesBurros/src/herd/serialize.ser";
 	/** the collection of statistics **/
 	private ArrayList<Statistic> stats = new ArrayList<>(20);
 
@@ -48,6 +48,33 @@ public class DataSet {
 	public void setStats(ArrayList<Statistic> stats) {
 		this.stats = stats;
 	}
-	
-	
+
+
+
+	public void serializeStatistic(Statistic statistic)	{
+		try {
+			FileOutputStream fileOut = new FileOutputStream(FILE_NAME);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(statistic);
+			out.close();
+			fileOut.close();
+			System.out.printf("Serialized data for state %s is saved in %s\n",
+					((StateStatistic) statistic).getState(), FILE_NAME);
+		}
+		catch (IOException i) {
+			i.printStackTrace();
+		}
+	}
+
+	public void deserializeStatistic(Statistic statistic) {
+		try {
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
+			StateStatistic ss = (StateStatistic) in.readObject();
+			System.out.println("State: " +ss.getState() + " Horses: "+ ss.getNumHorses()
+					+ " Burros: " + ss.getNumBurros());
+		}
+		catch (Exception e) {
+			System.out.println("Ya dunn did it.");
+		}
+	}
 }

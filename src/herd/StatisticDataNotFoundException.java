@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Created by ryan on 11/17/16.
  */
-public class StatisticDataNotFoundException extends IOException {
+public class StatisticDataNotFoundException extends Exception {
     public StatisticDataNotFoundException(){
         super("File not found.");
     }
