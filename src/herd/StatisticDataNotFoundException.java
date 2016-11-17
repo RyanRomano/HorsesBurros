@@ -1,21 +1,17 @@
 package herd;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 
 /**
  * Created by ryan on 11/17/16.
  */
 public class StatisticDataNotFoundException extends Exception {
+
     public StatisticDataNotFoundException(){
-        super("File not found.");
+
     }
 
-    public StatisticDataNotFoundException(Throwable throwable){
-        super(throwable);
+    public StatisticDataNotFoundException(String s){
+        super(s);
     }
-
-    public StatisticDataNotFoundException(String message, Throwable throwable){
-        super (message, throwable);
-    }
-
 }

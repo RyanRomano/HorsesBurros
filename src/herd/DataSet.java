@@ -66,7 +66,7 @@ public class DataSet {
 		}
 	}
 
-	public void deserializeStatistic(Statistic statistic) {
+	public void deserializeStatistic() {
 		try {
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
 			StateStatistic ss = (StateStatistic) in.readObject();
@@ -74,7 +74,7 @@ public class DataSet {
 					+ " Burros: " + ss.getNumBurros());
 		}
 		catch (Exception e) {
-			System.out.println("Ya dunn did it.");
+			System.out.println("No serialized values to deserialize.");
 		}
 	}
 }
