@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Driver {
-
 	public static void main(String[] args) {
-		String fileName = "/home/ryan/Desktop/OOPDA/HorsesBurros/src/herd/herdManagement.csv";
+		String fileName = "src/herd/herdManagement.csv";
+
+		//Initialize DataSet with no parameters. Populate with loadStatistics.
 		DataSet data = new DataSet();
 		try {
 			loadStatistics(data, fileName, 3);
@@ -16,15 +17,14 @@ public class Driver {
 		catch (StatisticDataNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
+		//Display all state's horses & burros data
 		displayStatistics(data);
-		ArrayList<Statistic> stats = data.getStats();
 
+		//Get Random State, serialize, deserialize.
 		Random random = new Random();
-		int statsize;
-		statsize = stats.size();
-		if (statsize>0) {
-			int randomState = random.nextInt(stats.size() - 1);
-			StateStatistic state = (StateStatistic) stats.get(randomState);
+		if (data.getStats().size() > 0) {
+			int randomState = random.nextInt(data.getStats().size() - 1);
+			StateStatistic state = (StateStatistic) data.getStats().get(randomState);
 			System.out.println("~~~~~~~~~~~~~~~~~~~~Serialize~~~~~~~~~~~~~~~~~");
 			data.serializeStatistic(state);
 			System.out.println("~~~~~~~~~~~~~~~~~~~~Deserialize~~~~~~~~~~~~~~~");
@@ -33,35 +33,46 @@ public class Driver {
 	}
 
 	private static void loadStatistics(DataSet data, String fileName, int numOfHeaderRows) throws StatisticDataNotFoundException {
+		//New ArrayList stats to work with in this method.
+		//Line is from each line of csv file
+		//stateInformation to split each Line into component data
 		ArrayList<Statistic> stats = new ArrayList<>();
 		String line;
-		String[] stateInformaton;
+		String[] stateInformation;
+
+		//Open Buffered reader, read first 3 lines.
 		try {
 			BufferedReader buff = new BufferedReader(new FileReader(fileName));
 			for (int i = 0; i < numOfHeaderRows; i++) {
 				buff.readLine();
 			}
+
+			//Until last line, read each line. Split line at commas, Parse state, and parse as long.
+			//Add new Statistic to method ArrayList field stats.
 			while ((line = buff.readLine()) != null) {
-				stateInformaton = line.split(",");
-				State state = State.valueOf(stateInformaton[0]);
-				long herdAcresBLM = Long.parseLong(stateInformaton[1]);
-				long herdAreaAcresOther = Long.parseLong(stateInformaton[2]);
-				long herdManagementAreaAcresBLM = Long.parseLong(stateInformaton[3]);
-				long herdManagementAreaAcresOther = Long.parseLong(stateInformaton[4]);
-				long numHorses = Long.parseLong(stateInformaton[5]);
-				long numBurros = Long.parseLong(stateInformaton[6]);
+				stateInformation = line.split(",");
+				State state = State.valueOf(stateInformation[0]);
+				long herdAcresBLM = Long.parseLong(stateInformation[1]);
+				long herdAreaAcresOther = Long.parseLong(stateInformation[2]);
+				long herdManagementAreaAcresBLM = Long.parseLong(stateInformation[3]);
+				long herdManagementAreaAcresOther = Long.parseLong(stateInformation[4]);
+				long numHorses = Long.parseLong(stateInformation[5]);
+				long numBurros = Long.parseLong(stateInformation[6]);
 				stats.add(new StateStatistic(state, herdAcresBLM, herdAreaAcresOther,
 						herdManagementAreaAcresBLM, herdManagementAreaAcresOther, numHorses, numBurros));
 			}
+			//Close stream
 			buff.close();
 		}
 		catch (IOException e) {
 			throw new StatisticDataNotFoundException("File not found.");
 		}
+		//Set empty DataSet -> ArrayList<Statistics> stats
 		data.setStats(stats);
 	}
 	
 	private static void displayStatistics(DataSet data) {
+		//
 		for (Statistic statistic : data.getStats()){
 			System.out.println("State: " + ((StateStatistic) statistic).getState()
 					+ " Horses: "+((StateStatistic) statistic).getNumHorses()

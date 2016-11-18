@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * A dataset is a collection of statistics
  */
 public class DataSet {
-	final String FILE_NAME = "/home/ryan/Desktop/OOPDA/HorsesBurros/src/herd/serialize.ser";
+	final String FILE_NAME = "src/herd/serialize.ser";
 	/** the collection of statistics **/
 	private ArrayList<Statistic> stats = new ArrayList<>(20);
 
