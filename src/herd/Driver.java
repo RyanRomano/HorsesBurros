@@ -16,16 +16,17 @@ public class Driver {
 			loadStatistics(data, fileName, 3);
 		}
 		catch (StatisticDataNotFoundException e) {
-			System.out.println(e.getMessage() + fileName + "\nAttempted access at: " + LocalTime.now());
+			System.out.println(e.getMessage() );
 		}
 		//Display all state's horses & burros data
 		displayStatistics(data);
 
 		//Get Random State, serialize, deserialize.
 		Random random = new Random();
-		if (data.getStats().size() > 0) {
-			int randomState = random.nextInt(data.getStats().size() - 1);
-			StateStatistic state = (StateStatistic) data.getStats().get(randomState);
+		ArrayList<Statistic> statistics = data.getStats();
+		if (statistics.size() > 0) {
+			int randomState = random.nextInt(statistics.size());
+			StateStatistic state = (StateStatistic) statistics.get(randomState);
 			System.out.println("~~~~~~~~~~~~~~~~~~~~Serialize~~~~~~~~~~~~~~~~~");
 			try {
 				data.serializeStatistic(state);
@@ -75,7 +76,7 @@ public class Driver {
 			buff.close();
 		}
 		catch (IOException e) {
-			throw new StatisticDataNotFoundException("File not found : ");
+			throw new StatisticDataNotFoundException("File not found : " + fileName + "\nAttempted access at: " + LocalTime.now());
 		}
 		//Set empty DataSet list of Statistics (cast as StateStatistics)
 		data.setStats(stats);
@@ -88,10 +89,12 @@ public class Driver {
 			horses += ((StateStatistic) statistic).getNumHorses();
 			burros += ((StateStatistic) statistic).getNumBurros();
 			System.out.println("State: " + ((StateStatistic) statistic).getState()
-					+ " Horses: "+((StateStatistic) statistic).getNumHorses()
-					+ " Burros: " + ((StateStatistic) statistic).getNumBurros());
+					+ " \tHorses: " +((StateStatistic) statistic).getNumHorses()
+					+ " \tBurros: " + ((StateStatistic) statistic).getNumBurros());
 
 		}
-		System.out.println("\nTotal number of horses: " + horses + "\nTotal number of burros: " + burros + "\n");
+		if (data.getStats().size() > 0) {
+			System.out.println("\nTotal number of horses: " + horses + "\nTotal number of burros: " + burros + "\n");
+		}
 	}
 }

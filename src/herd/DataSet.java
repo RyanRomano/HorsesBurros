@@ -71,9 +71,9 @@ public class DataSet {
 	public void deserializeStatistic() throws StatisticDataNotFoundException{
 		try {
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
-			StateStatistic ss = (StateStatistic) in.readObject();
-			System.out.println("State: " +ss.getState() + " Horses: "+ ss.getNumHorses()
-					+ " Burros: " + ss.getNumBurros());
+			StateStatistic stat = (StateStatistic) in.readObject();
+			System.out.println("State: " +stat.getState() + " \tHorses: "+ stat.getNumHorses()
+					+ " \tBurros: " + stat.getNumBurros());
 		}
 		catch (Exception e) {
 			throw new StatisticDataNotFoundException("Nothing to deserialize.");
