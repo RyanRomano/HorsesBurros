@@ -2,6 +2,7 @@ package herd;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,7 +16,7 @@ public class Driver {
 			loadStatistics(data, fileName, 3);
 		}
 		catch (StatisticDataNotFoundException e) {
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage() + fileName + "\nAttempted access at: " + LocalTime.now());
 		}
 		//Display all state's horses & burros data
 		displayStatistics(data);
@@ -27,7 +28,7 @@ public class Driver {
 			StateStatistic state = (StateStatistic) data.getStats().get(randomState);
 			System.out.println("~~~~~~~~~~~~~~~~~~~~Serialize~~~~~~~~~~~~~~~~~");
 			data.serializeStatistic(state);
-			System.out.println("~~~~~~~~~~~~~~~~~~~~Deserialize~~~~~~~~~~~~~~~");
+			System.out.println("\n~~~~~~~~~~~~~~~~~~~~Deserialize~~~~~~~~~~~~~~~");
 			data.deserializeStatistic();
 		}
 	}
@@ -65,18 +66,23 @@ public class Driver {
 			buff.close();
 		}
 		catch (IOException e) {
-			throw new StatisticDataNotFoundException("File not found.");
+			throw new StatisticDataNotFoundException("File not found : ");
 		}
-		//Set empty DataSet -> ArrayList<Statistics> stats
+		//Set empty DataSet list of Statistics (cast as StateStatistics)
 		data.setStats(stats);
 	}
 	
 	private static void displayStatistics(DataSet data) {
-		//
+		int burros=0;
+		long horses=0;
 		for (Statistic statistic : data.getStats()){
+			horses += ((StateStatistic) statistic).getNumHorses();
+			burros += ((StateStatistic) statistic).getNumBurros();
 			System.out.println("State: " + ((StateStatistic) statistic).getState()
 					+ " Horses: "+((StateStatistic) statistic).getNumHorses()
 					+ " Burros: " + ((StateStatistic) statistic).getNumBurros());
+
 		}
+		System.out.println("\nTotal number of horses: " + horses + "\nTotal number of burros: " + burros + "\n");
 	}
 }
