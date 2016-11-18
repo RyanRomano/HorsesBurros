@@ -27,14 +27,23 @@ public class Driver {
 			int randomState = random.nextInt(data.getStats().size() - 1);
 			StateStatistic state = (StateStatistic) data.getStats().get(randomState);
 			System.out.println("~~~~~~~~~~~~~~~~~~~~Serialize~~~~~~~~~~~~~~~~~");
-			data.serializeStatistic(state);
+			try {
+				data.serializeStatistic(state);
+			}
+			catch (StatisticDataNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
 			System.out.println("\n~~~~~~~~~~~~~~~~~~~~Deserialize~~~~~~~~~~~~~~~");
-			data.deserializeStatistic();
+			try {
+				data.deserializeStatistic();
+			}
+			catch (StatisticDataNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 
 	private static void loadStatistics(DataSet data, String fileName, int numOfHeaderRows) throws StatisticDataNotFoundException {
-		//New ArrayList stats to work with in this method.
 		//Line is from each line of csv file
 		//stateInformation to split each Line into component data
 		ArrayList<Statistic> stats = new ArrayList<>();

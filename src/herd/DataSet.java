@@ -1,6 +1,8 @@
 package herd;
 import java.io.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * A dataset is a collection of statistics
@@ -51,7 +53,7 @@ public class DataSet {
 
 
 
-	public void serializeStatistic(Statistic statistic)	{
+	public void serializeStatistic(Statistic statistic)	throws StatisticDataNotFoundException{
 		try {
 			FileOutputStream fileOut = new FileOutputStream(FILE_NAME);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -62,11 +64,11 @@ public class DataSet {
 					((StateStatistic) statistic).getState(), FILE_NAME);
 		}
 		catch (IOException i) {
-			i.printStackTrace();
+			throw new StatisticDataNotFoundException("Serialize file not found: " + FILE_NAME + " " + LocalTime.now());
 		}
 	}
 
-	public void deserializeStatistic() {
+	public void deserializeStatistic() throws StatisticDataNotFoundException{
 		try {
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
 			StateStatistic ss = (StateStatistic) in.readObject();
@@ -74,7 +76,7 @@ public class DataSet {
 					+ " Burros: " + ss.getNumBurros());
 		}
 		catch (Exception e) {
-			System.out.println("No serialized values to deserialize.");
+			throw new StatisticDataNotFoundException("Nothing to deserialize.");
 		}
 	}
 }
