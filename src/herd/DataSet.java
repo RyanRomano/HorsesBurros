@@ -2,7 +2,6 @@ package herd;
 import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * A dataset is a collection of statistics
@@ -50,8 +49,6 @@ public class DataSet {
 	public void setStats(ArrayList<Statistic> stats) {
 		this.stats = stats;
 	}
-
-
 
 	public void serializeStatistic(Statistic statistic)	throws StatisticDataNotFoundException{
 		try {

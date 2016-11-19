@@ -10,7 +10,10 @@ public class Driver {
 	public static void main(String[] args) {
 		String fileName = "src/herd/herdManagement.csv";
 
-		//Initialize DataSet with no parameters. Populate with loadStatistics.
+		//--------------------------------------------------------------------------------------------------
+		//----------------Initialize DataSet with no parameters. Populate with loadStatistics.--------------
+		//----------------------------------------DISPLAY STATE DATA----------------------------------------
+
 		DataSet data = new DataSet();
 		try {
 			loadStatistics(data, fileName, 3);
@@ -21,7 +24,9 @@ public class Driver {
 		//Display all state's horses & burros data
 		displayStatistics(data);
 
-		//Get Random State, serialize, deserialize.
+		//--------------------------------------------------------------------------------------------------
+		//--------------------Get Random State, serialize, deserialize.-------------------------------------
+		//--------------------------------------------------------------------------------------------------
 		Random random = new Random();
 		ArrayList<Statistic> statistics = data.getStats();
 		if (statistics.size() > 0) {
@@ -43,23 +48,17 @@ public class Driver {
 			}
 		}
 	}
-
+	//--------------------------------------------------------------------------------------------------
+	//----------------------------------LOAD DATASET ARRAY OF STATISTICS--------------------------------
+	//--------------------------------------------------------------------------------------------------
 	private static void loadStatistics(DataSet data, String fileName, int numOfHeaderRows) throws StatisticDataNotFoundException {
-		//Line is from each line of csv file
-		//stateInformation to split each Line into component data
-		ArrayList<Statistic> stats = new ArrayList<>();
 		String line;
 		String[] stateInformation;
-
-		//Open Buffered reader, read first 3 lines.
 		try {
 			BufferedReader buff = new BufferedReader(new FileReader(fileName));
 			for (int i = 0; i < numOfHeaderRows; i++) {
 				buff.readLine();
 			}
-
-			//Until last line, read each line. Split line at commas, Parse state, and parse as long.
-			//Add new Statistic to method ArrayList field stats.
 			while ((line = buff.readLine()) != null) {
 				stateInformation = line.split(",");
 				State state = State.valueOf(stateInformation[0]);
@@ -69,19 +68,18 @@ public class Driver {
 				long herdManagementAreaAcresOther = Long.parseLong(stateInformation[4]);
 				long numHorses = Long.parseLong(stateInformation[5]);
 				long numBurros = Long.parseLong(stateInformation[6]);
-				stats.add(new StateStatistic(state, herdAcresBLM, herdAreaAcresOther,
+				data.addStatistic(new StateStatistic(state, herdAcresBLM, herdAreaAcresOther,
 						herdManagementAreaAcresBLM, herdManagementAreaAcresOther, numHorses, numBurros));
 			}
-			//Close stream
 			buff.close();
 		}
 		catch (IOException e) {
 			throw new StatisticDataNotFoundException("File not found : " + fileName + "\nAttempted access at: " + LocalTime.now());
 		}
-		//Set empty DataSet list of Statistics (cast as StateStatistics)
-		data.setStats(stats);
 	}
-	
+	//--------------------------------------------------------------------------------------------------
+	//-------------------------------------DISPLAY STATISTICS FOR EACH STATE---------------------------
+	//--------------------------------------------------------------------------------------------------
 	private static void displayStatistics(DataSet data) {
 		int burros=0;
 		long horses=0;
@@ -91,7 +89,6 @@ public class Driver {
 			System.out.println("State: " + ((StateStatistic) statistic).getState()
 					+ " \tHorses: " +((StateStatistic) statistic).getNumHorses()
 					+ " \tBurros: " + ((StateStatistic) statistic).getNumBurros());
-
 		}
 		if (data.getStats().size() > 0) {
 			System.out.println("\nTotal number of horses: " + horses + "\nTotal number of burros: " + burros + "\n");
